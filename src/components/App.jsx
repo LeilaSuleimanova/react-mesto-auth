@@ -12,7 +12,7 @@ import AddPlacePopup from "./AddPlacePopup.jsx";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
-import { authorization } from "../utils/token.js";
+import { authorization } from "../utils/auth.js";
 import InfoTooltip from "./InfoTooltip.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 
@@ -46,8 +46,7 @@ function App() {
   const closePopupsByEsc = useCallback(
     (event) => {
       if (event.key === "Escape") {
-        setStatesClosePopup();
-        document.removeEventListener("keydown", closePopupsByEsc);
+        closePopup();
       }
     },
     [setStatesClosePopup]
@@ -218,80 +217,75 @@ function App() {
   }
 
   return (
-    <>
-      <CurrentUserContext.Provider value={currentUser}>
-        <div className="page">
-          <Header email={userEmail} logIn={logIn} logOut={handleLogOut} />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute
-                  element={Main}
-                  logIn={logIn}
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onEditAvatar={handleEditAvatarClick}
-                  onAddCard={handleCardClick}
-                  onDelete={handleDeleteClick}
-                  onCardLike={handleCardLike}
-                  card={card}
-                />
-              }
-            />
-            <Route
-              path="sign-up"
-              element={<Register handleRegister={handleRegister} />}
-            />
-            <Route
-              path="sign-in"
-              element={<Login handleLogin={handleLogin} />}
-            />
-            <Route path="/*" element={<Navigate to="/sign-in" />} />
-          </Routes>
-          <Footer />
-
-          <EditProfilePopup
-            onUpdateUser={handleUpdateUser}
-            isOpen={isEditProfilePopupOpen}
-            onClose={closePopup}
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="page">
+        <Header email={userEmail} logIn={logIn} logOut={handleLogOut} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute
+                element={Main}
+                logIn={logIn}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onAddCard={handleCardClick}
+                onDelete={handleDeleteClick}
+                onCardLike={handleCardLike}
+                card={card}
+              />
+            }
           />
-
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onAddPlace={handleAddPlaceSubmit}
-            onClose={closePopup}
+          <Route
+            path="sign-up"
+            element={<Register handleRegister={handleRegister} />}
           />
+          <Route path="sign-in" element={<Login handleLogin={handleLogin} />} />
+          <Route path="/*" element={<Navigate to="/sign-in" />} />
+        </Routes>
+        <Footer />
 
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closePopup}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
+        <EditProfilePopup
+          onUpdateUser={handleUpdateUser}
+          isOpen={isEditProfilePopupOpen}
+          onClose={closePopup}
+        />
 
-          <PopupWithForm
-            name="popup-delete"
-            title="Вы уверены ?"
-            popupButton="Да"
-            isOpen={isDeletePopupOpen}
-            onClose={closePopup}
-            onSubmit={handleCardDelete}
-          />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onAddPlace={handleAddPlaceSubmit}
+          onClose={closePopup}
+        />
 
-          <ImagePopup
-            card={isCard}
-            isOpen={isImagePopupOpen}
-            onClose={closePopup}
-          />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closePopup}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
 
-          <InfoTooltip
-            isOpen={isInfoTooltipOpen}
-            onClose={closePopup}
-            isCorrect={isCorrectLogIn}
-          />
-        </div>
-      </CurrentUserContext.Provider>
-    </>
+        <PopupWithForm
+          name="popup-delete"
+          title="Вы уверены ?"
+          popupButton="Да"
+          isOpen={isDeletePopupOpen}
+          onClose={closePopup}
+          onSubmit={handleCardDelete}
+        />
+
+        <ImagePopup
+          card={isCard}
+          isOpen={isImagePopupOpen}
+          onClose={closePopup}
+        />
+
+        <InfoTooltip
+          isOpen={isInfoTooltipOpen}
+          onClose={closePopup}
+          isCorrect={isCorrectLogIn}
+        />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 
