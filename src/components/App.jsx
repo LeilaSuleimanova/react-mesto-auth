@@ -46,7 +46,8 @@ function App() {
   const closePopupsByEsc = useCallback(
     (event) => {
       if (event.key === "Escape") {
-        closePopup();
+        setStatesClosePopup();
+        document.removeEventListener("keydown", closePopupsByEsc);
       }
     },
     [setStatesClosePopup]
